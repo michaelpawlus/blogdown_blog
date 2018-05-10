@@ -1,0 +1,10 @@
+---
+title: Test
+author: Michael Pawlus
+date: '2018-05-09'
+slug: test
+categories: [test]
+tags: [test]
+---
+
+Just a test...
