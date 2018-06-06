@@ -7,7 +7,7 @@ categories: []
 tags: []
 ---
 
-# Getting All World Cup 2018 Squads
+# World Cup 2018 is Finally Here - A Quick Analysis of all Teams
 
 It has been a long, long 1,423 days since the conclusion of the last World Cup. Luckily, this long wait is almost over which means it is time to analyze everything and anything World Cup related.
 
@@ -15,7 +15,16 @@ In this post, let's start with getting all the squads.
 
 We will gather all the team data from the Wikipedia page.
 
-First, get the url for that page:
+### First, load libraries:
+
+```{r}
+# load libraries
+library(tidyverse) # for data manipulation
+library(rvest) # for web scraping
+library(lubridate) # to work with the birthdates
+```
+
+After, get the url for the Wikipedia page:
 
 ```{r}
 url <- "https://en.wikipedia.org/wiki/2018_FIFA_World_Cup_squads"
@@ -62,11 +71,30 @@ We will be stacking all the data for 2018 squads on top of all the historical te
 ```{r}
 # clean up the data
 teams <- teams %>%
-  filter(!is.na(Caps)) %>%
-  select(-`0#0`) %>%
-  # add and change columns to match historical data
-  mutate(No = NA, ClubCountry = NA, Year = 2018) %>%
-  rename(Pos = `Pos.`, `DOB/Age` = `Date of birth (age)`, Country = team_name) %>%
-  select(-Goals) %>%
+  mutate(`No.` = as.character(`No.`), ClubCountry = NA, Year = 2018) %>%
+  rename(No = `No.`, Pos = `Pos.`, `DOB/Age` = `Date of birth (age)`, Country = team_name) %>%
   select(No,Pos,Player,`DOB/Age`,Caps,Club,Country,ClubCountry,Year)
 ```
+
+Thanks to [this repo](https://github.com/sanand0/fifadata) by S. Anand we can get all historical teams:
+
+```{r}
+## read in historical data
+historic_data <- read_csv("https://raw.githubusercontent.com/sanand0/fifadata/master/squads.csv")
+```
+
+We have to change the data type for the `Caps` column to match
+
+```{r}
+# change data type for Caps to match
+historic_data <- historic_data %>%
+  mutate(Caps = as.integer(Caps))
+```
+
+Finally, we can stack the data and we have all teams for 2018 as well as all historical teams in one table
+
+```{r}
+# stack 2018 data and historical data
+all_squads <- bind_rows(historic_data,teams)
+```
+
