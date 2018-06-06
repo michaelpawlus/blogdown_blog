@@ -24,6 +24,7 @@ We will gather all the team data from the Wikipedia page.
 library(tidyverse) # for data manipulation
 library(rvest) # for web scraping
 library(lubridate) # to work with the birthdates
+library(DT) # to create an interactive table at the end
 ```
 
 ### After, get the url for the Wikipedia page:
@@ -103,10 +104,22 @@ historic_data <- historic_data %>%
 
 ### Stack Everything
 
-Finally, we can stack the data and we have all teams for 2018 as well as all historical teams in one table
+Finally, we can stack the data and we have all teams for 2018 as well as all historical teams in one table.
 
 ```{r}
 # stack 2018 data and historical data
 all_squads <- bind_rows(historic_data,teams)
 ```
 
+The table below contains all the squad details for the 2018 World Cup:
+
+```{r echo=FALSE}
+int_table <- all_squads %>%
+  filter(Year == 2018) %>%
+  select(Pos,Player,`DOB/Age`,Caps,Country,Club) %>%
+  mutate_at(c("Pos","Country"), ~as.factor(.))
+  
+datatable(int_table, filter = 'top', options = list(pageLength = 23))
+```
+
+In the next post, we will break up date of birth into more useful pieces and vizualize some of this data.
