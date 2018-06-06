@@ -9,15 +9,15 @@ tags: []
 
 
 
-<div id="world-cup-2018-is-finally-here---a-quick-analysis-of-all-teams" class="section level1">
-<h1>World Cup 2018 is Finally Here - A Quick Analysis of all Teams</h1>
+<div id="world-cup-2018-is-finally-here" class="section level1">
+<h1>World Cup 2018 is Finally Here</h1>
+<div id="a-quick-analysis-of-all-teams" class="section level2">
+<h2>A Quick Analysis of all Teams</h2>
 <p>It has been a long, long 1,423 days since the conclusion of the last World Cup. Luckily, this long wait is almost over which means it is time to analyze everything and anything World Cup related.</p>
 <p>In this post, let’s start with getting all the squads.</p>
 <p>We will gather all the team data from the Wikipedia page.</p>
 <div id="first-load-libraries" class="section level3">
 <h3>First, load libraries:</h3>
-<pre class="r"><code># load libraries
-library(tidyverse) # for data manipulation</code></pre>
 <pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
 <pre><code>## ✔ ggplot2 2.2.1     ✔ purrr   0.2.4
 ## ✔ tibble  1.4.2     ✔ dplyr   0.7.5
@@ -26,7 +26,6 @@ library(tidyverse) # for data manipulation</code></pre>
 <pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
-<pre class="r"><code>library(rvest) # for web scraping</code></pre>
 <pre><code>## Loading required package: xml2</code></pre>
 <pre><code>## 
 ## Attaching package: &#39;rvest&#39;</code></pre>
@@ -36,18 +35,22 @@ library(tidyverse) # for data manipulation</code></pre>
 <pre><code>## The following object is masked from &#39;package:readr&#39;:
 ## 
 ##     guess_encoding</code></pre>
-<pre class="r"><code>library(lubridate) # to work with the birthdates</code></pre>
 <pre><code>## 
 ## Attaching package: &#39;lubridate&#39;</code></pre>
 <pre><code>## The following object is masked from &#39;package:base&#39;:
 ## 
 ##     date</code></pre>
-<p>After, get the url for the Wikipedia page:</p>
+</div>
+<div id="after-get-the-url-for-the-wikipedia-page" class="section level3">
+<h3>After, get the url for the Wikipedia page:</h3>
 <pre class="r"><code>url &lt;- &quot;https://en.wikipedia.org/wiki/2018_FIFA_World_Cup_squads&quot;</code></pre>
 <p>There are 32 teams and each one is in a table and each table has a sequential number in the XPath for that table.</p>
-<p>Since we know this, we can first create a vector of sequential numbers from 1 to 32</p>
+<p>This is also true for the team names but they are in headers which also contain the same set of sequential numbers.</p>
+<p>Since we know this, we can first create a vector of sequential numbers from 1 to 32:</p>
 <pre class="r"><code>table_numbers &lt;- c(1:32)</code></pre>
-<p>Next, we will write a function to get all the player data from each table on the Wikipedia page:</p>
+</div>
+<div id="next-write-a-function-to-get-all-the-player-data-from-each-table" class="section level3">
+<h3>Next, write a function to get all the player data from each table:</h3>
 <pre class="r"><code># function to get table for each team
 get_teams &lt;- function(tbl_nums) {
   
@@ -65,14 +68,22 @@ get_teams &lt;- function(tbl_nums) {
     as.tibble() %&gt;%
     mutate(team_name = team_name) # add country names
 }</code></pre>
-<p>Then, we will use <code>map</code> to iterate over our vector of numbers and pull player data for each team:</p>
+</div>
+<div id="then-use-map-to-iterate-over-vector-of-numbers-and-pull-player-data-for-each-team" class="section level3">
+<h3>Then, use <code>map</code> to iterate over vector of numbers and pull player data for each team:</h3>
 <pre class="r"><code>teams &lt;- map_df(table_numbers, get_teams)</code></pre>
+</div>
+<div id="data-clean-up" class="section level3">
+<h3>Data Clean-Up</h3>
 <p>We will be stacking all the data for 2018 squads on top of all the historical team data for analysis later. As a result we need to make some changes to our extracted data so we can <code>bind_rows</code> with the historical data.</p>
 <pre class="r"><code># clean up the data
 teams &lt;- teams %&gt;%
   mutate(`No.` = as.character(`No.`), ClubCountry = NA, Year = 2018) %&gt;%
   rename(No = `No.`, Pos = `Pos.`, `DOB/Age` = `Date of birth (age)`, Country = team_name) %&gt;%
   select(No,Pos,Player,`DOB/Age`,Caps,Club,Country,ClubCountry,Year)</code></pre>
+</div>
+<div id="get-historical-teams" class="section level3">
+<h3>Get Historical Teams</h3>
 <p>Thanks to <a href="https://github.com/sanand0/fifadata">this repo</a> by S. Anand we can get all historical teams:</p>
 <pre class="r"><code>## read in historical data
 historic_data &lt;- read_csv(&quot;https://raw.githubusercontent.com/sanand0/fifadata/master/squads.csv&quot;)</code></pre>
@@ -88,14 +99,21 @@ historic_data &lt;- read_csv(&quot;https://raw.githubusercontent.com/sanand0/fif
 ##   ClubCountry = col_character(),
 ##   Year = col_integer()
 ## )</code></pre>
+</div>
+<div id="a-little-more-clean-up" class="section level3">
+<h3>A Little More Clean-Up</h3>
 <p>We have to change the data type for the <code>Caps</code> column to match</p>
 <pre class="r"><code># change data type for Caps to match
 historic_data &lt;- historic_data %&gt;%
   mutate(Caps = as.integer(Caps))</code></pre>
 <pre><code>## Warning in evalq(as.integer(Caps), &lt;environment&gt;): NAs introduced by
 ## coercion</code></pre>
+</div>
+<div id="stack-everything" class="section level3">
+<h3>Stack Everything</h3>
 <p>Finally, we can stack the data and we have all teams for 2018 as well as all historical teams in one table</p>
 <pre class="r"><code># stack 2018 data and historical data
 all_squads &lt;- bind_rows(historic_data,teams)</code></pre>
+</div>
 </div>
 </div>

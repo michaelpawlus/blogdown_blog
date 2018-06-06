@@ -17,9 +17,10 @@
       <pubDate>Tue, 05 Jun 2018 00:00:00 +0000</pubDate>
       
       <guid>/2018/06/05/all-world-cup-squads/</guid>
-      <description>World Cup 2018 is Finally Here - A Quick Analysis of all Teams It has been a long, long 1,423 days since the conclusion of the last World Cup. Luckily, this long wait is almost over which means it is time to analyze everything and anything World Cup related.
+      <description>World Cup 2018 is Finally Here A Quick Analysis of all Teams It has been a long, long 1,423 days since the conclusion of the last World Cup. Luckily, this long wait is almost over which means it is time to analyze everything and anything World Cup related.
 In this post, let’s start with getting all the squads.
-We will gather all the team data from the Wikipedia page.</description>
+We will gather all the team data from the Wikipedia page.
+First, load libraries: ## ── Attaching packages ─────────────────────────────────────── tidyverse 1.</description>
     </item>
     
     <item>
