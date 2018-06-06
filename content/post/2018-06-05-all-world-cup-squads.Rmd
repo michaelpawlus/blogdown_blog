@@ -19,8 +19,8 @@ We will gather all the team data from the Wikipedia page.
 
 ### First, load libraries:
 
-```{r results='hide', echo = FALSE, warning=FALSE}
-# load libraries
+```{r message=FALSE, warning=FALSE}
+# load libraries  
 library(tidyverse) # for data manipulation
 library(rvest) # for web scraping
 library(lubridate) # to work with the birthdates

@@ -20,7 +20,7 @@
       <description>World Cup 2018 is Finally Here A Quick Analysis of all Teams It has been a long, long 1,423 days since the conclusion of the last World Cup. Luckily, this long wait is almost over which means it is time to analyze everything and anything World Cup related.
 In this post, let’s start with getting all the squads.
 We will gather all the team data from the Wikipedia page.
-First, load libraries: ## ── Attaching packages ─────────────────────────────────────── tidyverse 1.</description>
+First, load libraries: # load libraries library(tidyverse) # for data manipulation library(rvest) # for web scraping library(lubridate) # to work with the birthdates  After, get the url for the Wikipedia page: url &amp;lt;- &amp;quot;https://en.</description>
     </item>
     
     <item>
