@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on Michael Pawlus</title>
-    <link>/post/</link>
-    <description>Recent content in Posts on Michael Pawlus</description>
+    <title>Rstats on Michael Pawlus</title>
+    <link>/categories/rstats/</link>
+    <description>Recent content in Rstats on Michael Pawlus</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 08 Jun 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/categories/rstats/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -20,26 +20,6 @@
       <description>Age of World Cup Players This is post two in a series using data for all World Cup teams collected in the first post
 Here we will do a few visualizations around age.
 Setup # load libraries library(tidyverse) # for data manipulation library(lubridate) # to work with the birthdates # load data all_squads &amp;lt;- read_csv(&amp;quot;https://raw.githubusercontent.com/joemgon/worldcup2018/master/squads.csv&amp;quot;)  How has the age of players changed over time? # age of players by year ggplot(all_squads, aes(x=Year, y=age)) + geom_jitter(alpha=0.</description>
-    </item>
-    
-    <item>
-      <title>All World Cup Squads</title>
-      <link>/2018/06/05/all-world-cup-squads/</link>
-      <pubDate>Tue, 05 Jun 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/2018/06/05/all-world-cup-squads/</guid>
-      <description>World Cup 2018 is Finally Here A Quick Analysis of all Teams It has been a long, long 1,423 days since the conclusion of the last World Cup. Luckily, this long wait is almost over which means it is time to analyze everything and anything World Cup related.
-In this post, let’s start with getting all the squads.
-We will gather all the team data from the Wikipedia page.</description>
-    </item>
-    
-    <item>
-      <title>Test</title>
-      <link>/2018/05/09/test/</link>
-      <pubDate>Wed, 09 May 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/2018/05/09/test/</guid>
-      <description>Just a test…</description>
     </item>
     
   </channel>

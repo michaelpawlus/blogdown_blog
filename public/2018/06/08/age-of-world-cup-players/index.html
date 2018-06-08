@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.37.1" />
+
+
+<title>Age of World Cup Players - Michael Pawlus</title>
+<meta property="og:title" content="Age of World Cup Players - Michael Pawlus">
+
+
+
+  
+
+
+
+
+
+
+
+
+<link href='//cdn.bootcss.com/highlight.js/9.11.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
+<link rel="stylesheet" href="/css/fonts.css" media="all">
+<link rel="stylesheet" href="/css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/images/logo.png"
+         width="50"
+         height="50"
+         alt="Logo">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="/about/">About</a></li>
+    
+    <li><a href="https://github.com/michaelpawlus">GitHub</a></li>
+    
+    <li><a href="https://twitter.com/michaelpawlus">Twitter</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+    <span class="article-duration">2 min read</span>
+    
+
+    <h1 class="article-title">Age of World Cup Players</h1>
+
+    
+    <span class="article-date">2018/06/08</span>
+    
+
+    <div class="article-content">
+      <div id="age-of-world-cup-players" class="section level1">
+<h1>Age of World Cup Players</h1>
+<p>This is post two in a series using data for all World Cup teams collected in the <a href="https://michaelpawlus.netlify.com/2018/06/05/all-world-cup-squads/">first post</a></p>
+<p>Here we will do a few visualizations around age.</p>
+<div id="setup" class="section level3">
+<h3>Setup</h3>
+<pre class="r"><code># load libraries  
+library(tidyverse) # for data manipulation
+library(lubridate) # to work with the birthdates
+
+# load data
+all_squads &lt;- read_csv(&quot;https://raw.githubusercontent.com/joemgon/worldcup2018/master/squads.csv&quot;)</code></pre>
+</div>
+<div id="how-has-the-age-of-players-changed-over-time" class="section level3">
+<h3>How has the age of players changed over time?</h3>
+<pre class="r"><code># age of players by year
+ggplot(all_squads, aes(x=Year, y=age)) +
+  geom_jitter(alpha=0.2, color=&quot;#171714&quot;) +
+  stat_summary(fun.y=mean, geom=&quot;line&quot;, size=1, color=&quot;#D30208&quot;) +
+  stat_summary(fun.y=median, geom=&quot;line&quot;, size=1, color=&quot;#E5C685&quot;) +
+  # note on mean line
+  annotate(&quot;rect&quot;, xmin = 1928, xmax = 1932, ymin = 41, ymax = 43,
+          color = &quot;#D30208&quot;, fill = &quot;#D30208&quot;) +
+  annotate(&quot;text&quot;, x = 1934, y = 42, label = &quot;average age&quot;, color=&quot;#171714&quot;, hjust = 0, size = 4) +
+  # note on median line
+  annotate(&quot;rect&quot;, xmin = 1928, xmax = 1932, ymin = 37, ymax = 39,
+           color = &quot;#E5C685&quot;, fill = &quot;#E5C685&quot;) +
+  annotate(&quot;text&quot;, x = 1934, y = 38, label = &quot;median age&quot;, color=&quot;#171714&quot;, hjust = 0, size = 4) +
+  theme(panel.background = element_blank(), 
+        panel.grid.major.y = element_line(color = &quot;#171714&quot;, size = 0.25), 
+        legend.position=&quot;none&quot;,
+        plot.title = element_text(hjust = 0.5)) + 
+  labs(x = &quot;Year&quot;, y = &quot;Age&quot;, title = &quot;Age of World Cup Players&quot;)</code></pre>
+<pre><code>## Warning: Removed 160 rows containing non-finite values (stat_summary).
+
+## Warning: Removed 160 rows containing non-finite values (stat_summary).</code></pre>
+<pre><code>## Warning: Removed 160 rows containing missing values (geom_point).</code></pre>
+<p><img src="/post/2018-06-08-age-of-world-cup-players_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+</div>
+</div>
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          <li>
+            <a href="/index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="/images/hugo-logo.png" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+
+
+<script src="//cdn.bootcss.com/highlight.js/9.11.0/highlight.min.js"></script>
+
+
+
+<script src="//cdn.bootcss.com/highlight.js/9.11.0/languages/r.min.js"></script>
+<script src="//cdn.bootcss.com/highlight.js/9.11.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+
+    
+
+    
+  </body>
+</html>
+

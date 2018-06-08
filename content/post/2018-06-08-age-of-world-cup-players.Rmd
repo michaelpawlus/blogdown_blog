@@ -1,0 +1,50 @@
+---
+title: Age of World Cup Players
+author: Michael Pawlus
+date: '2018-06-08'
+slug: age-of-world-cup-players
+categories:
+  - rstats
+tags:
+  - Soccer
+---
+
+# Age of World Cup Players
+
+This is post two in a series using data for all World Cup teams collected in the [first post](https://michaelpawlus.netlify.com/2018/06/05/all-world-cup-squads/)
+
+Here we will do a few visualizations around age.
+
+### Setup
+
+```{r message=FALSE, warning=FALSE}
+# load libraries  
+library(tidyverse) # for data manipulation
+library(lubridate) # to work with the birthdates
+
+# load data
+all_squads <- read_csv("https://raw.githubusercontent.com/joemgon/worldcup2018/master/squads.csv")
+```
+
+### How has the age of players changed over time?
+
+```{r}
+# age of players by year
+ggplot(all_squads, aes(x=Year, y=age)) +
+  geom_jitter(alpha=0.2, color="#171714") +
+  stat_summary(fun.y=mean, geom="line", size=1, color="#D30208") +
+  stat_summary(fun.y=median, geom="line", size=1, color="#E5C685") +
+  # note on mean line
+  annotate("rect", xmin = 1928, xmax = 1932, ymin = 41, ymax = 43,
+          color = "#D30208", fill = "#D30208") +
+  annotate("text", x = 1934, y = 42, label = "average age", color="#171714", hjust = 0, size = 4) +
+  # note on median line
+  annotate("rect", xmin = 1928, xmax = 1932, ymin = 37, ymax = 39,
+           color = "#E5C685", fill = "#E5C685") +
+  annotate("text", x = 1934, y = 38, label = "median age", color="#171714", hjust = 0, size = 4) +
+  theme(panel.background = element_blank(), 
+        panel.grid.major.y = element_line(color = "#171714", size = 0.25), 
+        legend.position="none",
+        plot.title = element_text(hjust = 0.5)) + 
+  labs(x = "Year", y = "Age", title = "Age of World Cup Players")
+```
