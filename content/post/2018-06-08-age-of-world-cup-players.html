@@ -20,6 +20,7 @@ tags:
 <pre class="r"><code># load libraries  
 library(tidyverse) # for data manipulation
 library(lubridate) # to work with the birthdates
+library(knitr) # for tables
 
 # load data
 all_squads &lt;- read_csv(&quot;https://raw.githubusercontent.com/joemgon/worldcup2018/master/squads.csv&quot;)</code></pre>
@@ -44,10 +45,105 @@ ggplot(all_squads, aes(x=Year, y=age)) +
         legend.position=&quot;none&quot;,
         plot.title = element_text(hjust = 0.5)) + 
   labs(x = &quot;Year&quot;, y = &quot;Age&quot;, title = &quot;Age of World Cup Players&quot;)</code></pre>
-<pre><code>## Warning: Removed 160 rows containing non-finite values (stat_summary).
-
-## Warning: Removed 160 rows containing non-finite values (stat_summary).</code></pre>
-<pre><code>## Warning: Removed 160 rows containing missing values (geom_point).</code></pre>
 <p><img src="/post/2018-06-08-age-of-world-cup-players_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>The ages of players have not changed much but there does seem to be an increase in the the number of players in their mid-30s.</p>
+<pre class="r"><code>## players 35+
+all_squads %&gt;%
+  filter(age &gt; 34) %&gt;%
+  group_by(Year) %&gt;%
+  summarize(`Players 35 and older` = n_distinct(Player)) %&gt;%
+  ungroup() %&gt;%
+  arrange(desc(Year)) %&gt;%
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Year</th>
+<th align="right">Players 35 and older</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">2018</td>
+<td align="right">22</td>
+</tr>
+<tr class="even">
+<td align="right">2014</td>
+<td align="right">3</td>
+</tr>
+<tr class="odd">
+<td align="right">2010</td>
+<td align="right">21</td>
+</tr>
+<tr class="even">
+<td align="right">2006</td>
+<td align="right">21</td>
+</tr>
+<tr class="odd">
+<td align="right">2002</td>
+<td align="right">19</td>
+</tr>
+<tr class="even">
+<td align="right">1998</td>
+<td align="right">19</td>
+</tr>
+<tr class="odd">
+<td align="right">1994</td>
+<td align="right">16</td>
+</tr>
+<tr class="even">
+<td align="right">1990</td>
+<td align="right">7</td>
+</tr>
+<tr class="odd">
+<td align="right">1986</td>
+<td align="right">9</td>
+</tr>
+<tr class="even">
+<td align="right">1982</td>
+<td align="right">8</td>
+</tr>
+<tr class="odd">
+<td align="right">1978</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="right">1974</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="right">1970</td>
+<td align="right">4</td>
+</tr>
+<tr class="even">
+<td align="right">1966</td>
+<td align="right">7</td>
+</tr>
+<tr class="odd">
+<td align="right">1962</td>
+<td align="right">6</td>
+</tr>
+<tr class="even">
+<td align="right">1958</td>
+<td align="right">7</td>
+</tr>
+<tr class="odd">
+<td align="right">1954</td>
+<td align="right">9</td>
+</tr>
+<tr class="even">
+<td align="right">1950</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="right">1934</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="right">1930</td>
+<td align="right">1</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>

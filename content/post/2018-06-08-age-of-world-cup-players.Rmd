@@ -21,6 +21,7 @@ Here we will do a few visualizations around age.
 # load libraries  
 library(tidyverse) # for data manipulation
 library(lubridate) # to work with the birthdates
+library(knitr) # for tables
 
 # load data
 all_squads <- read_csv("https://raw.githubusercontent.com/joemgon/worldcup2018/master/squads.csv")
@@ -28,7 +29,7 @@ all_squads <- read_csv("https://raw.githubusercontent.com/joemgon/worldcup2018/m
 
 ### How has the age of players changed over time?
 
-```{r}
+```{r warning=FALSE}
 # age of players by year
 ggplot(all_squads, aes(x=Year, y=age)) +
   geom_jitter(alpha=0.2, color="#171714") +
@@ -47,4 +48,17 @@ ggplot(all_squads, aes(x=Year, y=age)) +
         legend.position="none",
         plot.title = element_text(hjust = 0.5)) + 
   labs(x = "Year", y = "Age", title = "Age of World Cup Players")
+```
+
+The ages of players have not changed much but there does seem to be an increase in the the number of players in their mid-30s.
+
+```{r}
+## players 35+
+all_squads %>%
+  filter(age > 34) %>%
+  group_by(Year) %>%
+  summarize(`Players 35 and older` = n_distinct(Player)) %>%
+  ungroup() %>%
+  arrange(desc(Year)) %>%
+  kable()
 ```
