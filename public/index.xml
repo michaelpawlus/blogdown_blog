@@ -19,7 +19,7 @@
       <guid>/2018/06/08/age-of-world-cup-players/</guid>
       <description>Age of World Cup Players This is post two in a series using data for all World Cup teams collected in the first post
 Here we will do a few visualizations around age.
-Setup # load libraries library(tidyverse) # for data manipulation library(lubridate) # to work with the birthdates library(knitr) # for tables # load data all_squads &amp;lt;- read_csv(&amp;quot;https://raw.githubusercontent.com/joemgon/worldcup2018/master/squads.csv&amp;quot;)  How has the age of players changed over time? # age of players by year ggplot(all_squads, aes(x=Year, y=age)) + geom_jitter(alpha=0.</description>
+Setup # load libraries library(tidyverse) # for data manipulation library(lubridate) # to work with the birthdates library(knitr) # for tables library(plotly) # for interactive plots # load data all_squads &amp;lt;- read_csv(&amp;quot;https://raw.githubusercontent.com/joemgon/worldcup2018/master/squads.csv&amp;quot;)  How has the age of players changed over time?</description>
     </item>
     
     <item>
