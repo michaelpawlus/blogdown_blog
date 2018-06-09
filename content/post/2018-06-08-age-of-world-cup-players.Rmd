@@ -160,10 +160,10 @@ all_squads %>%
   tally() %>%
   arrange(birth_month) %>%
   ggplot(aes(x = month_abbr, y = n)) +
-  geom_point() +
+  geom_point(size = 3) +
   theme(text = element_text(color = "#171714"),
         panel.background = element_blank(), 
-        panel.grid.major.x = element_line(color = "#171714", size = 0.15), 
+        panel.grid.major.y = element_line(color = "#171714", size = 0.15), 
         legend.position="none",
         plot.title = element_text(hjust = 0.5)) +
   labs(x = "Birth Month", y = "Count of Players born in this Month", title = "WC Players by Birth Month")
