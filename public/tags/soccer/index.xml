@@ -6,10 +6,21 @@
     <description>Recent content in Soccer on Michael Pawlus</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 08 Jun 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 12 Jun 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/soccer/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>World Cup Player Caps and Clubs</title>
+      <link>/2018/06/12/world-cup-player-caps-and-clubs/</link>
+      <pubDate>Tue, 12 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/2018/06/12/world-cup-player-caps-and-clubs/</guid>
+      <description>World Cup Player Caps and Clubs This is post three in a series using data for all World Cup teams collected in the first post
+In the second post we looked explored the ages of players over time, by team and by position as well as checked to see if there was a skewed distribution among birth months.
+For this post we will look at caps which is the term used for counting how many appearnces a player has made for games at the international level.</description>
+    </item>
     
     <item>
       <title>Age of World Cup Players</title>
