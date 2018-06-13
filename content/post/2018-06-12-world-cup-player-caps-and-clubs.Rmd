@@ -15,10 +15,10 @@ This is post three in a series using data for all World Cup teams collected in t
 
 In the [second post](https://michaelpawlus.netlify.com/2018/06/08/age-of-world-cup-players/) we looked explored the ages of players over time, by team and by position as well as checked to see if there was a skewed distribution among birth months.
 
-For this post we will look at caps which is the term used for counting how many appearnces a player has made for games at the international level. We will also look at which clubs have the most players competing at this World Cup.
+For this post we will look at caps which is the term used for counting how many appearances a player has made for games at the international level. We will also look at which clubs have the most players competing at this World Cup.
 
 ### Setup
-```{r}
+```{r message=FALSE, warning=FALSE}
 library(tidyverse) # for data manipulation
 library(plotly) # for interactive plots
 library(knitr) # for tables
@@ -29,7 +29,9 @@ all_squads <- read_csv("https://raw.githubusercontent.com/michaelpawlus/worldcup
 
 ### Caps Over Time
 
-```{r}
+Here we will look at how many caps players have accumulated by the time they participate in a World Cup:
+
+```{r message=FALSE, warning=FALSE}
 ## trend in caps over time
 ggplot(all_squads, aes(x=Year, y=Caps)) +
   geom_jitter(alpha=0.2, color="#171714") +
@@ -50,6 +52,8 @@ ggplot(all_squads, aes(x=Year, y=Caps)) +
   labs(x = "Year", y = "Caps", title = "World Cup Player Caps over time")
 ```
 
+This number has been trending up. Are there just more competitions now then there used to be? Plus, we already saw that older and older players are competing. It is somewhat arbitrary but I am interested in seeing who those dots are above the 150 line for 2018.
+
 ### Those with 150 or more Caps playing this year
 
 ```{r}
@@ -63,7 +67,9 @@ all_squads %>%
 
 ### Caps by Team
 
-```{r}
+Next, we can look at caps by team like we did with age by team.
+
+```{r message=FALSE, warning=FALSE}
 wc18_adj_age <- all_squads %>%
   filter(Year == 2018) %>%
   mutate(Country = fct_reorder(Country, desc(Country)), Pos = fct_relevel(str_extract(Pos,"[:alpha:]+"), "GK","DF","MF","FW"))
@@ -92,7 +98,15 @@ wc18_adj_cap_plot$x$data[1][[1]][[3]] <- text_vec
 wc18_adj_cap_plot
 ```
 
+We can see that England, Morocco and Senegal all have no players with more than 60 caps.
+
+Mexico also stand out in that the player with the fewest caps on their team is Edson Álvarez with 13. Every other team has at least one player with under 5 caps.
+
+All CONCACAF teams (Costa Rica, Mexico, Panama) have players with over 50 caps on average. Does this highlight the lack of depth for countries from thos conference?
+
 ### Player Count by Club
+
+Lastly, we can look at a count of players by their clubs. 
 
 ```{r}
 # count clubs
@@ -114,3 +128,5 @@ all_squads %>%
         plot.title = element_text(hjust = 0.5)) +
   labs(x = "Clubs", y = "Players in WC Squads", title = "World Cup Player Count by Club (Top 12)")
 ```
+
+Manchester City have sent the largest delegation. However, we see four of the top six teams from the Premier League sending 10+ players. Absent from the list are Arsenal (who are rebuilding) and Liverpool. What does this portend for Liverpool next season? 
