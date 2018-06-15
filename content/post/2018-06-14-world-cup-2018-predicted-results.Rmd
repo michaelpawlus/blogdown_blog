@@ -28,6 +28,7 @@ library(knitr) # for tables
 
 # load data
 group_tables <- read_csv("https://raw.githubusercontent.com/michaelpawlus/worldcup2018/squads/group_stage_table.csv")
+group_match_results <- read_csv("https://raw.githubusercontent.com/michaelpawlus/worldcup2018/squads/group_stage_match_results.csv")
 round_of_16 <- read_csv("https://raw.githubusercontent.com/michaelpawlus/worldcup2018/squads/knockout_round16_matches.csv")
 quarters <- read_csv("https://raw.githubusercontent.com/michaelpawlus/worldcup2018/squads/knockout_semi_matches.csv")
 semis <- read_csv("https://raw.githubusercontent.com/michaelpawlus/worldcup2018/squads/knockout_semi2_matches.csv")
@@ -93,6 +94,12 @@ group_tables %>%
 group_tables %>%
   filter(group == "Group H") %>%
   kable()
+```
+
+## Predicted Results for Every Game in the Group Stage
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+group_match_results %>% kable()
 ```
 
 ## Knockout Rounds
