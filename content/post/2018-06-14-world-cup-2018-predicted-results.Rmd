@@ -1,0 +1,130 @@
+---
+title: World Cup 2018 Predicted Results
+author: Michael Pawlus
+date: '2018-06-14'
+slug: world-cup-2018-predicted-results
+categories:
+  - rstats
+tags:
+  - Soccer
+---
+
+# World Cup 2018 Predicted Results
+
+This is post four in a series using data for all World Cup teams collected in the [first post](https://michaelpawlus.netlify.com/2018/06/05/all-world-cup-squads/)
+
+In the [second post](https://michaelpawlus.netlify.com/2018/06/08/age-of-world-cup-players/) we looked explored the ages of players over time, by team and by position as well as checked to see if there was a skewed distribution among birth months.
+
+In [post three](https://michaelpawlus.netlify.com/2018/06/12/world-cup-player-caps-and-clubs/) we looked at the number of caps for players over time and by team as well as the clubs sending the largest delegations.
+
+This post is just to get the results published. I will add another post soon with how we arrived at these results.
+
+I will just say that we did not use a very complex approach due to time constraints and mostly predicted winners and losers based on a couple comparisons of team strength. The goal difference was not really calculated but are just approximated here due to some teams being level on points.
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+# load libraries
+library(tidyverse) # for data manipulation
+library(knitr) # for tables
+
+# load data
+group_tables <- read_csv("https://raw.githubusercontent.com/michaelpawlus/worldcup2018/squads/group_stage_table.csv")
+round_of_16 <- read_csv("https://raw.githubusercontent.com/michaelpawlus/worldcup2018/squads/knockout_round16_matches.csv")
+quarters <- read_csv("https://raw.githubusercontent.com/michaelpawlus/worldcup2018/squads/knockout_semi_matches.csv")
+semis <- read_csv("https://raw.githubusercontent.com/michaelpawlus/worldcup2018/squads/knockout_semi2_matches.csv")
+final <- read_csv("https://raw.githubusercontent.com/michaelpawlus/worldcup2018/squads/knockout_final_match.csv")
+```
+
+## Group Stage Predictions
+
+### Group A:
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+group_tables %>%
+  filter(group == "Group A") %>%
+  kable()
+```
+
+### Group B:
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+group_tables %>%
+  filter(group == "Group B") %>%
+  kable()
+```
+
+### Group C:
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+group_tables %>%
+  filter(group == "Group C") %>%
+  kable()
+```
+
+### Group D:
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+group_tables %>%
+  filter(group == "Group D") %>%
+  kable()
+```
+
+### Group E:
+
+Note: In this group we have Switzerland finishing ahead of Serbia.
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+group_tables %>%
+  filter(group == "Group E") %>%
+  kable()
+```
+
+### Group F:
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+group_tables %>%
+  filter(group == "Group F") %>%
+  kable()
+```
+
+### Group G:
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+group_tables %>%
+  filter(group == "Group G") %>%
+  kable()
+```
+
+### Group H:
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+group_tables %>%
+  filter(group == "Group H") %>%
+  kable()
+```
+
+## Knockout Rounds
+
+### Round of 16
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+round_of_16 %>%
+  select(o_team,d_team,team_a) %>%
+  rename(`Team A` = o_team, `Team B` = d_team, Winner = team_a) %>%
+  kable()
+```
+
+### Quarter-Finals
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+quarters %>%
+  select(o_team,d_team,team_a) %>%
+  rename(`Team A` = o_team, `Team B` = d_team, Winner = team_a) %>%
+  kable()
+```
+
+### Semi-Finals
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+semis %>%
+  select(o_team,d_team,team_a) %>%
+  rename(`Team A` = o_team, `Team B` = d_team, Winner = team_a) %>%
+  kable()
+```
+
+### Final
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+final %>%
+  select(o_team,d_team,team_a) %>%
+  rename(`Team A` = o_team, `Team B` = d_team, Winner = team_a) %>%
+  kable()
+```

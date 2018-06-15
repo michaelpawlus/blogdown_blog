@@ -6,10 +6,21 @@
     <description>Recent content on Michael Pawlus</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 12 Jun 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 14 Jun 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>World Cup 2018 Predicted Results</title>
+      <link>/2018/06/14/world-cup-2018-predicted-results/</link>
+      <pubDate>Thu, 14 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/2018/06/14/world-cup-2018-predicted-results/</guid>
+      <description>World Cup 2018 Predicted Results This is post four in a series using data for all World Cup teams collected in the first post
+In the second post we looked explored the ages of players over time, by team and by position as well as checked to see if there was a skewed distribution among birth months.
+In post three we looked at the number of caps for players over time and by team as well as the clubs sending the largest delegations.</description>
+    </item>
     
     <item>
       <title>World Cup Player Caps and Clubs</title>
