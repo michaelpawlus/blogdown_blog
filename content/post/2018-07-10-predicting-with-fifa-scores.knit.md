@@ -23,18 +23,14 @@ This post will show how we arrived at these predicted results and how they compa
 
 ## Libraries Required
 
-```{r message=FALSE, warning=FALSE, echo=FALSE}
-# load libs
-library(tidyverse)
-library(rvest)
-library(knitr)
-```
+
 
 ## Function to get all historical results
 
 The first step will be to get all historical results and then later rankings to build a training set.  The function below is the function for all match results. We create a vector of world cup editions to then paste into the url via a call to map.
 
-```{r}
+
+```r
 # get the section of the url that we need for as many cups as we want -- here I use the last five
 wc <- c("brazil2014","southafrica2010","germany2006","koreajapan2002","france1998")
 
@@ -131,7 +127,8 @@ tibble(
 
 After we create the function, we then map over it as mentioned above to get all match results and then create a table to use later.
 
-```{r}
+
+```r
 # map over get_results function to get results for all cups included in wc vector
 results <- map_df(wc, get_results)
 
@@ -165,6 +162,4 @@ results <- results %>%
 
 We can look at a few of these rows.
 
-```{r}
-kable(head(results))
-```
+
