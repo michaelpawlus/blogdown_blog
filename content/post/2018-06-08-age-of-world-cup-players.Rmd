@@ -114,11 +114,11 @@ wc18_adj_age_plot$x$data[1][[1]][[3]] <- text_vec
 wc18_adj_age_plot
 ```
 
-Sweden's Emil Krafth is the oldest youngest player at 23.87 years. 
-South Korea's Lee Yong is the youngest oldest player at 31.48 years. 
-Kylian Mpabbé is the youngest player this year at 19.48 while Egypt's Essam El-Hadary is the oldest player to ever compete at a World Cup. 
-Nigeria has the lowest average age of 25.97. 
-Mexico has the largest average age: 29.37
+* Sweden's Emil Krafth is the oldest youngest player at 23.87 years
+* South Korea's Lee Yong is the youngest oldest player at 31.48 years 
+* Australia's Daniel Arzani is the youngest player this year at 19.44 while Egypt's Essam El-Hadary is the oldest player to ever compete at a World Cup 
+* Nigeria has the lowest average age: 25.97
+* Mexico has the largest average age: 29.37
 
 The plot below is the same as above except by Position instead Country:
 
