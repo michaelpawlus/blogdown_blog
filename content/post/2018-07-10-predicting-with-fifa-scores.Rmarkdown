@@ -161,6 +161,7 @@ results <- results %>%
   )
   ## add in code to add a tag for expected result or upset (ask Joe about when a draw is an upset)
   )
+
 ```
 
 We can look at a few of these rows.
@@ -308,21 +309,3 @@ ratings <- ratings %>%
 
 ratings98 <- ratings
 ```
-
-After gathering results and ratings, we can create an upset table to use later
-
-```{r}
-upsets_tally <- results %>%
-  mutate(year = str_extract(edition,'[:digit:]+')) %>%
-  group_by(edition, year, round) %>%
-  summarize(expected = sum(if_else(result_type == "expected",1,0)), 
-            upsets = sum(if_else(result_type == "upset",1,0)),
-            draws = sum(if_else(home_result == "D",1,0))) %>%
-  arrange(desc(year)) %>%
-  ungroup()
-kable(upsets_tally)
-```
-
-Next, we can see how well we can predict outcomes by just using FIFA rankings. This was done before the Russian games started but since we have all Russian group results let's just include those now.
-
-

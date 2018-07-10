@@ -183,6 +183,143 @@ kable(head(results))
 After getting all the results we will then need all rankings in order to do some simple predicting just based on the FIFA ranking. The FIFA ranking is problematic and there may be a future post that dives into why in more detail soon (or just links to others that have already covered this).  For now, we get ratings using a similar method as used to get results. The one issue that I noticed was that country names are not always consistent and the code below adjusts for this.
 
 
+```r
+## ratings which have to be gathered one by one because they are not stored uniformily in wikitables
+
+# Brazil 2014:
+
+url <- "https://en.wikipedia.org/wiki/2014_FIFA_World_Cup_seeding"
+
+ratings <- url %>%
+read_html() %>%
+html_node(xpath = '//*[@id="mw-content-text"]/div/table[1]') %>%
+html_table(fill = TRUE) %>%
+as.tibble(
+)
+
+ratings <- ratings %>%
+  mutate(Team = str_extract(Team, '[^\\(]+'), Team = str_trim(Team, side = "right"), edition = "brazil2014") %>%
+  rename(team = Team, ranking = `FIFA RankingOctober 2013`) %>%
+  mutate(team = case_when(
+    team == "United States" ~ "USA",
+    team == "Iran" ~ "IR Iran",
+    team == "South Korea" ~ "Korea Republic",
+    team == "Ivory Coast" ~ "Côte d'Ivoire",
+    TRUE ~ as.character(team)
+  ))
+
+ratings14 <- ratings
+
+# South Africa 2010:
+
+url <- "https://en.wikipedia.org/wiki/2010_FIFA_World_Cup_seeding"
+
+ratings <- url %>%
+  read_html() %>%
+  html_node(xpath = '//*[@id="mw-content-text"]/div/table[1]') %>%
+  html_table(fill = TRUE) %>%
+  as.tibble(
+  )
+
+ratings <- ratings %>%
+  mutate(Association = str_extract(Association, '[^\\(]+'), Association = str_trim(Association, side = "right"), edition = "southafrica2010") %>%
+  rename(team = Association, ranking = `FIFA RankingOctober 2009`) %>%
+  mutate(team = case_when(
+    team == "United States" ~ "USA",
+    team == "South Korea" ~ "Korea Republic",
+    team == "North Korea" ~ "Korea DPR",
+    team == "Ivory Coast" ~ "Côte d'Ivoire",
+    TRUE ~ as.character(team)
+  ))
+
+ratings10 <- ratings
+
+# Germany 2006:
+
+url <- "https://en.wikipedia.org/wiki/2006_FIFA_World_Cup_seeding"
+
+ratings <- url %>%
+  read_html() %>%
+  html_node(xpath = '//*[@id="mw-content-text"]/div/table') %>%
+  html_table(fill = TRUE)
+
+ratings <- ratings[,c(2,12)]
+
+colnames(ratings) <- c('team','ranking')
+
+ratings <- ratings %>%
+  slice(3:34) %>%
+  mutate(edition = "germany2006", ranking = as.integer(ranking)) %>%
+  mutate(team = case_when(
+    team == "United States" ~ "USA",
+    team == "Iran" ~ "IR Iran",
+    team == "South Korea" ~ "Korea Republic",
+    team == "Ivory Coast" ~ "Côte d'Ivoire",
+    TRUE ~ as.character(team)
+  ))
+
+## add extra row for Iran name mismatch
+rating_extra_iran_row <- tribble(
+  ~team, ~ranking, ~edition,
+  "Iran",   19,     "germany2006" 
+)
+
+ratings06 <- ratings
+
+# Korea/Japan 2002:
+
+url <- 'https://en.wikipedia.org/wiki/2002_FIFA_World_Cup_seeding'
+
+ratings <- url %>%
+  read_html() %>%
+  html_node(xpath = '//*[@id="mw-content-text"]/div/table') %>%
+  html_table(fill = TRUE)
+
+ratings <- ratings[,c(2,12)]
+
+colnames(ratings) <- c('team','ranking')
+
+## results for 2002 have Iran listed as Iran and IR Iran
+ratings <- ratings %>%
+  slice(3:34) %>%
+  mutate(edition = "koreajapan2002", ranking = as.integer(ranking)) %>%
+  mutate(team = case_when(
+    team == "United States" ~ "USA",
+    team == "Iran" ~ "IR Iran",
+    team == "South Korea" ~ "Korea Republic",
+    team == "Ivory Coast" ~ "Côte d'Ivoire",
+    TRUE ~ as.character(team)
+  ))
+
+ratings02 <- ratings
+
+# France 1998:
+
+url <- 'https://en.wikipedia.org/wiki/1998_FIFA_World_Cup_seeding'
+
+ratings <- url %>%
+  read_html() %>%
+  html_node(xpath = '//*[@id="mw-content-text"]/div/table') %>%
+  html_table(fill = TRUE)
+
+ratings <- ratings[,c(2,12)]
+
+colnames(ratings) <- c('team','ranking')
+
+ratings <- ratings %>%
+  slice(3:34) %>%
+  mutate(edition = "france1998", ranking = as.integer(ranking)) %>%
+  mutate(team = case_when(
+    team == "United States" ~ "USA",
+    team == "South Korea" ~ "Korea Republic",
+    team == "Ivory Coast" ~ "Côte d'Ivoire",
+    TRUE ~ as.character(team)
+  ))
+
+ratings98 <- ratings
+```
+
+After gathering results and ratings, we can create an upset table to use later
 
 
 
