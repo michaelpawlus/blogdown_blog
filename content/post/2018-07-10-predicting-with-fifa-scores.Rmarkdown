@@ -189,7 +189,7 @@ as.tibble(
 
 ratings <- ratings %>%
   mutate(Team = str_extract(Team, '[^\\(]+'), Team = str_trim(Team, side = "right"), edition = "brazil2014") %>%
-  rename(team = Team, ranking = `FIFA Ranking\nOctober 2013`) %>%
+  rename(team = Team, ranking = `FIFA RankingOctober 2013`) %>%
   mutate(team = case_when(
     team == "United States" ~ "USA",
     team == "Iran" ~ "IR Iran",
@@ -213,7 +213,7 @@ ratings <- url %>%
 
 ratings <- ratings %>%
   mutate(Association = str_extract(Association, '[^\\(]+'), Association = str_trim(Association, side = "right"), edition = "southafrica2010") %>%
-  rename(team = Association, ranking = `FIFA Ranking\nOctober 2009`) %>%
+  rename(team = Association, ranking = `FIFA RankingOctober 2009`) %>%
   mutate(team = case_when(
     team == "United States" ~ "USA",
     team == "South Korea" ~ "Korea Republic",

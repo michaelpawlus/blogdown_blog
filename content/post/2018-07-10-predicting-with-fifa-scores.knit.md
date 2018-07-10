@@ -163,3 +163,26 @@ results <- results %>%
 We can look at a few of these rows.
 
 
+```r
+kable(head(results))
+```
+
+
+
+|edition    |datetime                       |date        |match_no |round   |home_team |home_code | home_score|score | away_score|away_team   |away_code |tiebreak_long |tiebreak_short |winner      |home_result |away_result |
+|:----------|:------------------------------|:-----------|:--------|:-------|:---------|:---------|----------:|:-----|----------:|:-----------|:---------|:-------------|:--------------|:-----------|:-----------|:-----------|
+|brazil2014 |12 Jun 2014 - 17:00 Local time |12 Jun 2014 |Match 1  |Group A |Brazil    |BRA       |          3|3-1   |          1|Croatia     |CRO       |              |               |Brazil      |W           |L           |
+|brazil2014 |13 Jun 2014 - 13:00 Local time |13 Jun 2014 |Match 2  |Group A |Mexico    |MEX       |          1|1-0   |          0|Cameroon    |CMR       |              |               |Mexico      |W           |L           |
+|brazil2014 |13 Jun 2014 - 16:00 Local time |13 Jun 2014 |Match 3  |Group B |Spain     |ESP       |          1|1-5   |          5|Netherlands |NED       |              |               |Netherlands |L           |W           |
+|brazil2014 |13 Jun 2014 - 18:00 Local time |13 Jun 2014 |Match 4  |Group B |Chile     |CHI       |          3|3-1   |          1|Australia   |AUS       |              |               |Chile       |W           |L           |
+|brazil2014 |14 Jun 2014 - 13:00 Local time |14 Jun 2014 |Match 5  |Group C |Colombia  |COL       |          3|3-0   |          0|Greece      |GRE       |              |               |Colombia    |W           |L           |
+|brazil2014 |14 Jun 2014 - 16:00 Local time |14 Jun 2014 |Match 7  |Group D |Uruguay   |URU       |          1|1-3   |          3|Costa Rica  |CRC       |              |               |Costa Rica  |L           |W           |
+
+## Function to get all historical rankings
+
+After getting all the results we will then need all rankings in order to do some simple predicting just based on the FIFA ranking. The FIFA ranking is problematic and there may be a future post that dives into why in more detail soon (or just links to others that have already covered this).  For now, we get ratings using a similar method as used to get results. The one issue that I noticed was that country names are not always consistent and the code below adjusts for this.
+
+
+
+
+
