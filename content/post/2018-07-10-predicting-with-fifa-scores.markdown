@@ -318,8 +318,3 @@ ratings <- ratings %>%
 
 ratings98 <- ratings
 ```
-
-After gathering results and ratings, we can create an upset table to use later
-
-
-

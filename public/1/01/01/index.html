@@ -1,22 +1,11 @@
----
-title: Age of World Cup Players
-author: Michael Pawlus
-date: '2018-06-08'
-slug: age-of-world-cup-players
-categories:
-  - rstats
-tags:
-  - Soccer
----
-
-<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
-<script src="/rmarkdown-libs/plotly-binding/plotly.js"></script>
-<script src="/rmarkdown-libs/typedarray/typedarray.min.js"></script>
-<script src="/rmarkdown-libs/jquery/jquery.min.js"></script>
-<link href="/rmarkdown-libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
-<script src="/rmarkdown-libs/crosstalk/js/crosstalk.min.js"></script>
-<link href="/rmarkdown-libs/plotlyjs/plotly-htmlwidgets.css" rel="stylesheet" />
-<script src="/rmarkdown-libs/plotlyjs/plotly-latest.min.js"></script>
+<script src="2018-06-08-age-of-world-cup-players_files/htmlwidgets/htmlwidgets.js"></script>
+<script src="2018-06-08-age-of-world-cup-players_files/plotly-binding/plotly.js"></script>
+<script src="2018-06-08-age-of-world-cup-players_files/typedarray/typedarray.min.js"></script>
+<script src="2018-06-08-age-of-world-cup-players_files/jquery/jquery.min.js"></script>
+<link href="2018-06-08-age-of-world-cup-players_files/crosstalk/css/crosstalk.css" rel="stylesheet" />
+<script src="2018-06-08-age-of-world-cup-players_files/crosstalk/js/crosstalk.min.js"></script>
+<link href="2018-06-08-age-of-world-cup-players_files/plotlyjs/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="2018-06-08-age-of-world-cup-players_files/plotlyjs/plotly-latest.min.js"></script>
 
 
 <div id="notes" class="section level4">
@@ -62,7 +51,7 @@ ggplot(all_squads, aes(x=Year, y=age)) +
         legend.position=&quot;none&quot;,
         plot.title = element_text(hjust = 0.5)) + 
   labs(x = &quot;Year&quot;, y = &quot;Age&quot;, title = &quot;Age of World Cup Players&quot;)</code></pre>
-<p><img src="/post/2018-06-08-age-of-world-cup-players_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="2018-06-08-age-of-world-cup-players_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <p>The ages of players have not changed much but there does seem to be an increase in the the number of players in their mid-30s.</p>
 <pre class="r"><code>## players 35+
 all_squads %&gt;%
@@ -253,6 +242,6 @@ wc18_adj_age_plot</code></pre>
         legend.position=&quot;none&quot;,
         plot.title = element_text(hjust = 0.5)) +
   labs(x = &quot;Birth Month&quot;, y = &quot;Count of Players born in this Month&quot;, title = &quot;WC Players by Birth Month&quot;)</code></pre>
-<p><img src="/post/2018-06-08-age-of-world-cup-players_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="2018-06-08-age-of-world-cup-players_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 </div>
 </div>

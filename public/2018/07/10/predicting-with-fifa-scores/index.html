@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.37.1" />
+
+
+<title>Predicting with FIFA scores - Michael Pawlus</title>
+<meta property="og:title" content="Predicting with FIFA scores - Michael Pawlus">
+
+
+
+  
+
+
+
+
+
+
+
+
+<link href='//cdn.bootcss.com/highlight.js/9.11.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
+<link rel="stylesheet" href="/css/fonts.css" media="all">
+<link rel="stylesheet" href="/css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/images/logo.png"
+         width="50"
+         height="50"
+         alt="Logo">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="/about/">About</a></li>
+    
+    <li><a href="https://github.com/michaelpawlus">GitHub</a></li>
+    
+    <li><a href="https://twitter.com/michaelpawlus">Twitter</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+    <span class="article-duration">7 min read</span>
+    
+
+    <h1 class="article-title">Predicting with FIFA scores</h1>
+
+    
+    <span class="article-date">2018/07/10</span>
+    
+
+    <div class="article-content">
+      
+
+<h1 id="world-cup-2018-predicted-results">World Cup 2018 Predicted Results</h1>
+
+<p>This is post five in a series using data for all World Cup teams collected in the <a href="https://michaelpawlus.netlify.com/2018/06/05/all-world-cup-squads/">first post</a></p>
+
+<p>In the <a href="https://michaelpawlus.netlify.com/2018/06/08/age-of-world-cup-players/">second post</a> we looked explored the ages of players over time, by team and by position as well as checked to see if there was a skewed distribution among birth months.</p>
+
+<p>In <a href="https://michaelpawlus.netlify.com/2018/06/12/world-cup-player-caps-and-clubs/">post three</a> we looked at the number of caps for players over time and by team as well as the clubs sending the largest delegations.</p>
+
+<p><a href="http://michaelpawlus.netlify.com/2018/06/14/world-cup-2018-predicted-results/">Post four</a> was just a list of predicted results</p>
+
+<p>This post will show how we arrived at these predicted results and how they compared with reality as well as some even simpler baseline prediction methods.</p>
+
+<h2 id="libraries-required">Libraries Required</h2>
+
+<h2 id="function-to-get-all-historical-results">Function to get all historical results</h2>
+
+<p>The first step will be to get all historical results and then later rankings to build a training set.  The function below is the function for all match results. We create a vector of world cup editions to then paste into the url via a call to map.</p>
+
+<pre><code class="language-r"># get the section of the url that we need for as many cups as we want -- here I use the last five
+wc &lt;- c(&quot;brazil2014&quot;,&quot;southafrica2010&quot;,&quot;germany2006&quot;,&quot;koreajapan2002&quot;,&quot;france1998&quot;)
+
+# function to get all columns
+get_results &lt;- function(wc) {
+url &lt;- paste0(&quot;https://www.fifa.com/worldcup/archive/&quot;,wc,&quot;/matches/index.html&quot;)
+
+# datetimes
+all_datetimes &lt;- url %&gt;%
+  read_html() %&gt;%
+  html_nodes(&quot;.mu-i-datetime&quot;) %&gt;%
+  html_text()
+
+# dates
+all_dates &lt;- url %&gt;%
+  read_html() %&gt;%
+  html_nodes(&quot;.mu-i-date&quot;) %&gt;%
+  html_text()
+
+# match number
+all_match_numbers &lt;- url %&gt;%
+  read_html() %&gt;%
+  html_nodes(&quot;.mu-i-matchnum&quot;) %&gt;%
+  html_text()
+
+# round
+all_rounds &lt;- url %&gt;%
+  read_html() %&gt;%
+  html_nodes(&quot;.mu-i-group&quot;) %&gt;%
+  html_text()
+
+# long and short notes for matches that end aet or with pens
+all_tiebreakers &lt;- url %&gt;%
+  read_html() %&gt;%
+  html_nodes(&quot;.text-reasonwin&quot;) %&gt;%
+  html_text()
+
+# scores as text
+all_scores &lt;- url %&gt;%
+  read_html() %&gt;%
+  html_nodes(&quot;.s-scoreText&quot;) %&gt;%
+  html_text()
+
+# teams
+all_teams &lt;- url %&gt;%
+  read_html() %&gt;%
+  html_nodes(&quot;.t-nText &quot;) %&gt;%
+  html_text()
+
+# team codes
+all_codes &lt;- url %&gt;%
+  read_html() %&gt;%
+  html_nodes(&quot;.t-nTri&quot;) %&gt;%
+  html_text()
+
+# indices to split vectors with odd/even pattern
+home_index &lt;- seq(1,length(all_teams)-1,2)
+away_index &lt;- seq(2,length(all_teams),2)
+
+# split all_teams to home/away
+home_teams &lt;- all_teams[home_index]
+away_teams &lt;- all_teams[away_index]
+
+# split all_codes to home/away
+home_codes &lt;- all_codes[home_index]
+away_codes &lt;- all_codes[away_index]
+
+# split notes for games that end after 90' into long and short
+tiebreak_long &lt;- all_tiebreakers[home_index]
+tiebreak_short &lt;- all_tiebreakers[away_index]
+
+# create the tibble
+tibble(
+  edition = wc,
+  datetime = all_datetimes,
+  date = all_dates,
+  match_no = all_match_numbers,
+  round = all_rounds,
+  home_team = home_teams,
+  home_code = home_codes,
+  # get number before the hyphen - start of character string - as integer: home_score
+  home_score = as.integer(str_extract(all_scores,&quot;^[:digit:]&quot;)),
+  score = all_scores,
+  # get number after the hyphen - end of character string - as integer: away_score
+  away_score = as.integer(str_extract(all_scores,&quot;[:digit:]$&quot;)),
+  away_team = away_teams,
+  away_code = away_codes,
+  tiebreak_long = tiebreak_long,
+  tiebreak_short = tiebreak_short
+)
+}
+</code></pre>
+
+<p>After we create the function, we then map over it as mentioned above to get all match results and then create a table to use later.</p>
+
+<pre><code class="language-r"># map over get_results function to get results for all cups included in wc vector
+results &lt;- map_df(wc, get_results)
+
+# a few duplicate rows so remove those here
+results &lt;- distinct(results)
+
+# use score to get win/lose/draw columns
+results &lt;- results %&gt;%
+  mutate(winner = case_when(
+    home_score &gt; away_score ~ home_team,
+    away_score &gt; home_score ~ away_team,
+    home_score == away_score ~ str_extract(tiebreak_long, &quot;[:print:]+(?= win?)&quot;)
+  ),
+  home_result = case_when(
+    home_score &gt; away_score ~ 'W',
+    away_score &gt; home_score ~ 'L',
+    home_score == away_score &amp; tiebreak_long == &quot; &quot; ~ 'D',
+    home_score == away_score &amp; str_extract(tiebreak_long, &quot;[:print:]+(?= win?)&quot;) == home_team ~ 'W',
+    home_score == away_score &amp; str_extract(tiebreak_long, &quot;[:print:]+(?= win?)&quot;) != home_team ~ 'L'
+  ),
+  away_result = case_when(
+    away_score &gt; home_score ~ 'W',
+    home_score &gt; away_score ~ 'L',
+    away_score == home_score &amp; tiebreak_long == &quot; &quot; ~ 'D',
+    away_score == home_score &amp; str_extract(tiebreak_long, &quot;[:print:]+(?= win?)&quot;) == away_team ~ 'W',
+    away_score == home_score &amp; str_extract(tiebreak_long, &quot;[:print:]+(?= win?)&quot;) != away_team ~ 'L'
+  )
+  ## add in code to add a tag for expected result or upset (ask Joe about when a draw is an upset)
+  )
+</code></pre>
+
+<p>We can look at a few of these rows.</p>
+
+<pre><code class="language-r">kable(head(results))
+</code></pre>
+
+<table>
+<thead>
+<tr>
+<th align="left">edition</th>
+<th align="left">datetime</th>
+<th align="left">date</th>
+<th align="left">match_no</th>
+<th align="left">round</th>
+<th align="left">home_team</th>
+<th align="left">home_code</th>
+<th align="right">home_score</th>
+<th align="left">score</th>
+<th align="right">away_score</th>
+<th align="left">away_team</th>
+<th align="left">away_code</th>
+<th align="left">tiebreak_long</th>
+<th align="left">tiebreak_short</th>
+<th align="left">winner</th>
+<th align="left">home_result</th>
+<th align="left">away_result</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="left">brazil2014</td>
+<td align="left">12 Jun 2014 - 17:00 Local time</td>
+<td align="left">12 Jun 2014</td>
+<td align="left">Match 1</td>
+<td align="left">Group A</td>
+<td align="left">Brazil</td>
+<td align="left">BRA</td>
+<td align="right">3</td>
+<td align="left">3-1</td>
+<td align="right">1</td>
+<td align="left">Croatia</td>
+<td align="left">CRO</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">Brazil</td>
+<td align="left">W</td>
+<td align="left">L</td>
+</tr>
+
+<tr>
+<td align="left">brazil2014</td>
+<td align="left">13 Jun 2014 - 13:00 Local time</td>
+<td align="left">13 Jun 2014</td>
+<td align="left">Match 2</td>
+<td align="left">Group A</td>
+<td align="left">Mexico</td>
+<td align="left">MEX</td>
+<td align="right">1</td>
+<td align="left">1-0</td>
+<td align="right">0</td>
+<td align="left">Cameroon</td>
+<td align="left">CMR</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">Mexico</td>
+<td align="left">W</td>
+<td align="left">L</td>
+</tr>
+
+<tr>
+<td align="left">brazil2014</td>
+<td align="left">13 Jun 2014 - 16:00 Local time</td>
+<td align="left">13 Jun 2014</td>
+<td align="left">Match 3</td>
+<td align="left">Group B</td>
+<td align="left">Spain</td>
+<td align="left">ESP</td>
+<td align="right">1</td>
+<td align="left">1-5</td>
+<td align="right">5</td>
+<td align="left">Netherlands</td>
+<td align="left">NED</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">Netherlands</td>
+<td align="left">L</td>
+<td align="left">W</td>
+</tr>
+
+<tr>
+<td align="left">brazil2014</td>
+<td align="left">13 Jun 2014 - 18:00 Local time</td>
+<td align="left">13 Jun 2014</td>
+<td align="left">Match 4</td>
+<td align="left">Group B</td>
+<td align="left">Chile</td>
+<td align="left">CHI</td>
+<td align="right">3</td>
+<td align="left">3-1</td>
+<td align="right">1</td>
+<td align="left">Australia</td>
+<td align="left">AUS</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">Chile</td>
+<td align="left">W</td>
+<td align="left">L</td>
+</tr>
+
+<tr>
+<td align="left">brazil2014</td>
+<td align="left">14 Jun 2014 - 13:00 Local time</td>
+<td align="left">14 Jun 2014</td>
+<td align="left">Match 5</td>
+<td align="left">Group C</td>
+<td align="left">Colombia</td>
+<td align="left">COL</td>
+<td align="right">3</td>
+<td align="left">3-0</td>
+<td align="right">0</td>
+<td align="left">Greece</td>
+<td align="left">GRE</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">Colombia</td>
+<td align="left">W</td>
+<td align="left">L</td>
+</tr>
+
+<tr>
+<td align="left">brazil2014</td>
+<td align="left">14 Jun 2014 - 16:00 Local time</td>
+<td align="left">14 Jun 2014</td>
+<td align="left">Match 7</td>
+<td align="left">Group D</td>
+<td align="left">Uruguay</td>
+<td align="left">URU</td>
+<td align="right">1</td>
+<td align="left">1-3</td>
+<td align="right">3</td>
+<td align="left">Costa Rica</td>
+<td align="left">CRC</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">Costa Rica</td>
+<td align="left">L</td>
+<td align="left">W</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="function-to-get-all-historical-rankings">Function to get all historical rankings</h2>
+
+<p>After getting all the results we will then need all rankings in order to do some simple predicting just based on the FIFA ranking. The FIFA ranking is problematic and there may be a future post that dives into why in more detail soon (or just links to others that have already covered this).  For now, we get ratings using a similar method as used to get results. The one issue that I noticed was that country names are not always consistent and the code below adjusts for this.</p>
+
+<pre><code class="language-r">## ratings which have to be gathered one by one because they are not stored uniformily in wikitables
+
+# Brazil 2014:
+
+url &lt;- &quot;https://en.wikipedia.org/wiki/2014_FIFA_World_Cup_seeding&quot;
+
+ratings &lt;- url %&gt;%
+read_html() %&gt;%
+html_node(xpath = '//*[@id=&quot;mw-content-text&quot;]/div/table[1]') %&gt;%
+html_table(fill = TRUE) %&gt;%
+as.tibble(
+)
+
+ratings &lt;- ratings %&gt;%
+  mutate(Team = str_extract(Team, '[^\\(]+'), Team = str_trim(Team, side = &quot;right&quot;), edition = &quot;brazil2014&quot;) %&gt;%
+  rename(team = Team, ranking = `FIFA RankingOctober 2013`) %&gt;%
+  mutate(team = case_when(
+    team == &quot;United States&quot; ~ &quot;USA&quot;,
+    team == &quot;Iran&quot; ~ &quot;IR Iran&quot;,
+    team == &quot;South Korea&quot; ~ &quot;Korea Republic&quot;,
+    team == &quot;Ivory Coast&quot; ~ &quot;Côte d'Ivoire&quot;,
+    TRUE ~ as.character(team)
+  ))
+
+ratings14 &lt;- ratings
+
+# South Africa 2010:
+
+url &lt;- &quot;https://en.wikipedia.org/wiki/2010_FIFA_World_Cup_seeding&quot;
+
+ratings &lt;- url %&gt;%
+  read_html() %&gt;%
+  html_node(xpath = '//*[@id=&quot;mw-content-text&quot;]/div/table[1]') %&gt;%
+  html_table(fill = TRUE) %&gt;%
+  as.tibble(
+  )
+
+ratings &lt;- ratings %&gt;%
+  mutate(Association = str_extract(Association, '[^\\(]+'), Association = str_trim(Association, side = &quot;right&quot;), edition = &quot;southafrica2010&quot;) %&gt;%
+  rename(team = Association, ranking = `FIFA RankingOctober 2009`) %&gt;%
+  mutate(team = case_when(
+    team == &quot;United States&quot; ~ &quot;USA&quot;,
+    team == &quot;South Korea&quot; ~ &quot;Korea Republic&quot;,
+    team == &quot;North Korea&quot; ~ &quot;Korea DPR&quot;,
+    team == &quot;Ivory Coast&quot; ~ &quot;Côte d'Ivoire&quot;,
+    TRUE ~ as.character(team)
+  ))
+
+ratings10 &lt;- ratings
+
+# Germany 2006:
+
+url &lt;- &quot;https://en.wikipedia.org/wiki/2006_FIFA_World_Cup_seeding&quot;
+
+ratings &lt;- url %&gt;%
+  read_html() %&gt;%
+  html_node(xpath = '//*[@id=&quot;mw-content-text&quot;]/div/table') %&gt;%
+  html_table(fill = TRUE)
+
+ratings &lt;- ratings[,c(2,12)]
+
+colnames(ratings) &lt;- c('team','ranking')
+
+ratings &lt;- ratings %&gt;%
+  slice(3:34) %&gt;%
+  mutate(edition = &quot;germany2006&quot;, ranking = as.integer(ranking)) %&gt;%
+  mutate(team = case_when(
+    team == &quot;United States&quot; ~ &quot;USA&quot;,
+    team == &quot;Iran&quot; ~ &quot;IR Iran&quot;,
+    team == &quot;South Korea&quot; ~ &quot;Korea Republic&quot;,
+    team == &quot;Ivory Coast&quot; ~ &quot;Côte d'Ivoire&quot;,
+    TRUE ~ as.character(team)
+  ))
+
+## add extra row for Iran name mismatch
+rating_extra_iran_row &lt;- tribble(
+  ~team, ~ranking, ~edition,
+  &quot;Iran&quot;,   19,     &quot;germany2006&quot; 
+)
+
+ratings06 &lt;- ratings
+
+# Korea/Japan 2002:
+
+url &lt;- 'https://en.wikipedia.org/wiki/2002_FIFA_World_Cup_seeding'
+
+ratings &lt;- url %&gt;%
+  read_html() %&gt;%
+  html_node(xpath = '//*[@id=&quot;mw-content-text&quot;]/div/table') %&gt;%
+  html_table(fill = TRUE)
+
+ratings &lt;- ratings[,c(2,12)]
+
+colnames(ratings) &lt;- c('team','ranking')
+
+## results for 2002 have Iran listed as Iran and IR Iran
+ratings &lt;- ratings %&gt;%
+  slice(3:34) %&gt;%
+  mutate(edition = &quot;koreajapan2002&quot;, ranking = as.integer(ranking)) %&gt;%
+  mutate(team = case_when(
+    team == &quot;United States&quot; ~ &quot;USA&quot;,
+    team == &quot;Iran&quot; ~ &quot;IR Iran&quot;,
+    team == &quot;South Korea&quot; ~ &quot;Korea Republic&quot;,
+    team == &quot;Ivory Coast&quot; ~ &quot;Côte d'Ivoire&quot;,
+    TRUE ~ as.character(team)
+  ))
+
+ratings02 &lt;- ratings
+
+# France 1998:
+
+url &lt;- 'https://en.wikipedia.org/wiki/1998_FIFA_World_Cup_seeding'
+
+ratings &lt;- url %&gt;%
+  read_html() %&gt;%
+  html_node(xpath = '//*[@id=&quot;mw-content-text&quot;]/div/table') %&gt;%
+  html_table(fill = TRUE)
+
+ratings &lt;- ratings[,c(2,12)]
+
+colnames(ratings) &lt;- c('team','ranking')
+
+ratings &lt;- ratings %&gt;%
+  slice(3:34) %&gt;%
+  mutate(edition = &quot;france1998&quot;, ranking = as.integer(ranking)) %&gt;%
+  mutate(team = case_when(
+    team == &quot;United States&quot; ~ &quot;USA&quot;,
+    team == &quot;South Korea&quot; ~ &quot;Korea Republic&quot;,
+    team == &quot;Ivory Coast&quot; ~ &quot;Côte d'Ivoire&quot;,
+    TRUE ~ as.character(team)
+  ))
+
+ratings98 &lt;- ratings
+</code></pre>
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          <li>
+            <a href="/index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="/images/hugo-logo.png" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+
+
+<script src="//cdn.bootcss.com/highlight.js/9.11.0/highlight.min.js"></script>
+
+
+
+<script src="//cdn.bootcss.com/highlight.js/9.11.0/languages/r.min.js"></script>
+<script src="//cdn.bootcss.com/highlight.js/9.11.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+
+    
+<script src="/js/math-code.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+    
+  </body>
+</html>
+
