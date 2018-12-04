@@ -6,33 +6,10 @@
     <description>Recent content in Posts on Michael Pawlus</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 07 Aug 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 10 Jul 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>Data Analytics Symposium 2018</title>
-      <link>/2018/08/07/das-slides/</link>
-      <pubDate>Tue, 07 Aug 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/2018/08/07/das-slides/</guid>
-      <description>class: inverse, center, middle
-Who Are You? ???
-Add gif
-class: center
- class: center
- class: center
- class: center
- class: inverse, center, middle
- Let’s Talk Format ???
-Add gif
-.pull-left[ Start-Up Tracks
- Generally better suited to those just getting started  ]
-.pull-right[ Enterprise Tracks
- Generally better for those from more established shops ]  –
-However, you do not need to stay in one track the entire time</description>
-    </item>
     
     <item>
       <title>Predicting with FIFA scores</title>
