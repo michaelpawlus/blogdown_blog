@@ -160,6 +160,11 @@ results <- results %>%
   )
 ```
 
+```
+## Warning: The `printer` argument is deprecated as of rlang 0.3.0.
+## This warning is displayed once per session.
+```
+
 We can look at a few of these rows.
 
 
@@ -196,7 +201,14 @@ html_node(xpath = '//*[@id="mw-content-text"]/div/table[1]') %>%
 html_table(fill = TRUE) %>%
 as.tibble(
 )
+```
 
+```
+## Warning: `as.tibble()` is deprecated, use `as_tibble()` (but mind the new semantics).
+## This warning is displayed once per session.
+```
+
+```r
 ratings <- ratings %>%
   mutate(Team = str_extract(Team, '[^\\(]+'), Team = str_trim(Team, side = "right"), edition = "brazil2014") %>%
   rename(team = Team, ranking = `FIFA RankingOctober 2013`) %>%

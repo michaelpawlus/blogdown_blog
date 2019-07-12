@@ -215,6 +215,10 @@ results &lt;- results %&gt;%
   )
 </code></pre>
 
+<pre><code>## Warning: The `printer` argument is deprecated as of rlang 0.3.0.
+## This warning is displayed once per session.
+</code></pre>
+
 <p>We can look at a few of these rows.</p>
 
 <pre><code class="language-r">kable(head(results))
@@ -382,8 +386,13 @@ html_node(xpath = '//*[@id=&quot;mw-content-text&quot;]/div/table[1]') %&gt;%
 html_table(fill = TRUE) %&gt;%
 as.tibble(
 )
+</code></pre>
 
-ratings &lt;- ratings %&gt;%
+<pre><code>## Warning: `as.tibble()` is deprecated, use `as_tibble()` (but mind the new semantics).
+## This warning is displayed once per session.
+</code></pre>
+
+<pre><code class="language-r">ratings &lt;- ratings %&gt;%
   mutate(Team = str_extract(Team, '[^\\(]+'), Team = str_trim(Team, side = &quot;right&quot;), edition = &quot;brazil2014&quot;) %&gt;%
   rename(team = Team, ranking = `FIFA RankingOctober 2013`) %&gt;%
   mutate(team = case_when(
